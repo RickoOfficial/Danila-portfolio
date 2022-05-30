@@ -1,0 +1,23 @@
+:root {
+	--accent: #5757FF;
+	--accent2: #F23053;
+	--white: #fff;
+	--black: #150F21;
+	--silver: #98A5B1;
+	--grey: #878787;
+	color: var(--black);
+	font-family: 'NeoSansPro', sans-serif;
+	font-size: 16px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+h1, .h1 { font-family: 'Igra Sans'; font-size: 2rem; }
+h2, .h2 { font-family: 'Igra Sans'; font-size: 1.8rem; }
+h3, .h3 { font-family: 'Igra Sans'; font-size: 1.6rem; }
+h4, .h4 { font-family: 'Igra Sans'; font-size: 1.4rem; }
+h5, .h5 { font-family: 'Igra Sans'; font-size: 1.2rem; }
+h6, .h6 { font-family: 'Igra Sans'; font-size: 1rem; }
