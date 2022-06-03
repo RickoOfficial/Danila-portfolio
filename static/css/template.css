@@ -21,3 +21,11 @@ h3, .h3 { font-family: 'Igra Sans'; font-size: 1.6rem; }
 h4, .h4 { font-family: 'Igra Sans'; font-size: 1.4rem; }
 h5, .h5 { font-family: 'Igra Sans'; font-size: 1.2rem; }
 h6, .h6 { font-family: 'Igra Sans'; font-size: 1rem; }
+
+.blue { color: #569cd6; }
+.light-blue { color: #9cdcfe; }
+.pink { color: #da70d6; }
+.yellow { color: #ffd700; }
+.green { color: #4ec9b0; }
+.light-green { color: #b5cea8; }
+.brown { color: #ce9178; }

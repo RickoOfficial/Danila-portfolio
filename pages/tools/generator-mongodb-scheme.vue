@@ -53,7 +53,11 @@
 					</div>
 
 				</div>
-				<div class="col-5"></div>
+				<div class="col-5">
+					
+					<Code :code="code" />
+
+				</div>
 			</div>
 		</div>
 
@@ -73,8 +77,8 @@ export default {
 					name: 'product',
 					props: [
 						{ alias: 'id', type: 'String', required: true, unique: true, default: false },
-						{ alias: 'name', type: 'String', required: true, unique: false, default: false },
-						{ alias: 'price', type: 'Number', required: true, unique: false, default: 0 },
+						{ alias: 'name', type: 'String', required: true, unique: false, default: "`Стандартное название`" },
+						{ alias: 'price', type: 'Number', required: true, unique: false, default: 123 },
 						{ alias: 'published', type: 'Boolean', required: false, unique: false, default: true },
 					],
 					show: true,
@@ -82,6 +86,7 @@ export default {
 					nameForRedact: 'product',
 				}
 			],
+			code: ''
 		}
 	},
 	methods: {
@@ -125,6 +130,26 @@ export default {
 			this.schemes[schemeIndex].nameForRedact = this.schemes[schemeIndex].name
 			this.schemes[schemeIndex].nameIsRedact = false
 		}
+	},
+	watch: {
+		schemes: {
+			handler: function (val, oldVal) {
+				val.forEach(item => {
+					this.code = `const <span class="green">${item.name}</span> = new <span class="green">Schema</span>({`
+					item.props.forEach(prop => {
+						this.code += `\n\t<span class="light-blue">${prop.alias}:</span> {\n\t\t<span class="light-blue">type:</span> <span class="green">${prop.type}</span>,\n\t\t<span class="light-blue">required:</span> ${prop.required},\n\t\t<span class="light-blue">unique:</span> ${prop.unique},\n\t\t<span class="light-blue">default:</span> ${prop.default}\n\t},`
+					})
+					this.code += `\n})`
+				})
+				this.code = this.code.replace(/(const|new|true|false)/g, '<span class="blue">$1</span>')
+				this.code = this.code.replace(/({|})/g, '<span class="pink">$1</span>')
+				this.code = this.code.replace(/(\(|\))/g, '<span class="yellow">$1</span>')
+				this.code = this.code.replace(/`(.*)`/g, '<span class="brown">"$1"</span>')
+				this.code = this.code.replace(/ (\d+)/g, ' <span class="light-green">$1</span>')
+				this.code = this.code.split('\n')
+			},
+			deep: true
+		},
 	}
 }
 </script>
