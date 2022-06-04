@@ -1,6 +1,8 @@
 :root {
 	--accent: #5757FF;
+	--accent-hover: #3f49a6;
 	--accent2: #F23053;
+	--accent2-hover: #ca1c3c;
 	--white: #fff;
 	--black: #150F21;
 	--silver: #98A5B1;
@@ -29,3 +31,22 @@ h6, .h6 { font-family: 'Igra Sans'; font-size: 1rem; }
 .green { color: #4ec9b0; }
 .light-green { color: #b5cea8; }
 .brown { color: #ce9178; }
+
+button,
+.btn {
+	padding: 0.5rem 1rem;
+	background: var(--accent);
+	color: var(--white);
+	border: 2px solid transparent;
+	border-radius: 0.5rem;
+	font-family: 'Neo Sans Pro', sans-serif;
+	font-size: 1rem;
+	transition: 0.3s;
+	outline: none;
+	cursor: pointer;
+	user-select: none;
+}
+button:hover,
+.btn:hover {
+	background: var(--accent-hover);
+}

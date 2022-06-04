@@ -1,7 +1,7 @@
 <template>
 	<code>
 		<!-- <pre><span v-for="i in code.length"><span class="i">{{i}}.</span>	{{code[i]}}</span></pre> -->
-		<pre><span v-for="(row, i) in code" :key="i" class="code-row"><span class="i">{{ `   ${i}\t` }}</span><span v-html="row + '\n'"></span></span></pre>
+		<pre><span v-for="(row, i) in code" :key="i" class="code-row"><span v-html="row + '\n'"></span></span></pre>
 	</code>
 </template>
 

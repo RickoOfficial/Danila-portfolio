@@ -9,7 +9,7 @@
 			<div class="row">
 				<div class="col-7">
 
-					<div class="add-scheme-btn h5 mb-3">
+					<div @click="createScheme()" class="add-scheme-btn h5 mb-3">
 						Создать схему
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16"> <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/> <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/> </svg>
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16"> <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/> </svg>
@@ -25,6 +25,7 @@
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"> <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/> </svg>
 							</div>
 							<div v-show="scheme.show" class="scheme-body">
+								<!-- Название -->
 								<div class="scheme-name-redact">
 									<div class="h6">Название: </div>
 									<input type="text" v-model="scheme.nameForRedact" :disabled="!scheme.nameIsRedact">
@@ -47,7 +48,11 @@
 											</div>
 										</div>
 									</div>
+									<button @click="deleteScheme(schemeIndex)" class="delete-scheme">Удалить схему</button>
 								</div>
+								<!-- /Название -->
+
+								<button class="add-prop">Добавить свойство</button>
 							</div>
 						</div>
 					</div>
@@ -90,6 +95,18 @@ export default {
 		}
 	},
 	methods: {
+		createScheme() {
+			this.schemes.unshift({
+				name: 'name',
+				props: [],
+				show: true,
+				nameIsRedact: true,
+				nameForRedact: 'name'
+			})
+		},
+		deleteScheme(schemeIndex) {
+			this.schemes.splice(schemeIndex, 1);
+		},
 		saveNewName(schemeIndex) {
 			if(this.schemes[schemeIndex].nameForRedact.length == 0) {
 				this.$refs.Notification.open({
@@ -134,12 +151,13 @@ export default {
 	watch: {
 		schemes: {
 			handler: function (val, oldVal) {
+				this.code = '';
 				val.forEach(item => {
-					this.code = `const <span class="green">${item.name}</span> = new <span class="green">Schema</span>({`
+					this.code += `const <span class="green">${item.name}</span> = new <span class="green">Schema</span>({`
 					item.props.forEach(prop => {
 						this.code += `\n\t<span class="light-blue">${prop.alias}:</span> {\n\t\t<span class="light-blue">type:</span> <span class="green">${prop.type}</span>,\n\t\t<span class="light-blue">required:</span> ${prop.required},\n\t\t<span class="light-blue">unique:</span> ${prop.unique},\n\t\t<span class="light-blue">default:</span> ${prop.default}\n\t},`
 					})
-					this.code += `\n})`
+					this.code += `\n})\n`
 				})
 				this.code = this.code.replace(/(const|new|true|false)/g, '<span class="blue">$1</span>')
 				this.code = this.code.replace(/({|})/g, '<span class="pink">$1</span>')
@@ -165,23 +183,15 @@ export default {
 		color: var(--accent);
 		cursor: pointer;
 		user-select: none;
-		svg {
-			margin-left: 0.5rem;
-			width: 1.5rem;
-			height: 1.5rem;
-		}
-		.bi-plus-circle-fill {
-			display: none;
-		}
-		&:hover {
-			.bi-plus-circle { display: none; }
-			.bi-plus-circle-fill { display: block; }
-		}
+		svg { margin-left: 0.5rem; width: 1.5rem; height: 1.5rem; }
+		.bi-plus-circle-fill { display: none; }
+		&:hover { .bi-plus-circle { display: none; } .bi-plus-circle-fill { display: block; } }
 	}
 	.schemes-list {
 		list-style-type: none;
 		.scheme {
 			position: relative;
+			margin-bottom: 1rem;
 			overflow: hidden;
 			.scheme-head {
 				display: flex;
@@ -190,15 +200,10 @@ export default {
 				padding: 0.5rem 1rem;
 				border-radius: 0.5rem;
 				background: var(--accent);
+				cursor: pointer;
 				transition: .3s;
-				.scheme-name {
-					color: var(--white);
-				}
-				svg {
-					fill: var(--white);
-					transform: rotate(90deg);
-					transition: .3s;
-				}
+				.scheme-name { color: var(--white); }
+				svg { fill: var(--white); transform: rotate(90deg); transition: .3s; }
 			}
 			.scheme-body {
 				margin-top: -4px;
@@ -208,21 +213,8 @@ export default {
 					display: flex;
 					align-items: center;
 					.h6 { margin-right: 0.5rem; }
-					input {
-						position: relative;
-						padding: 0.3rem 0.5rem;
-						width: 20%;
-						border: none;
-						border: 1px dashed var(--accent);
-						color: var(--black);
-						font-size: 16px;
-						outline: none;
-					}
-					input[disabled] {
-						background: transparent;
-						border: 1px solid var(--accent);
-						color: var(--black);
-					}
+					input { position: relative; padding: 0.3rem 0.5rem; width: 20%; border: none; border: 1px dashed var(--accent); color: var(--black); font-size: 16px; outline: none; }
+					input[disabled] { background: transparent; border: 1px solid var(--accent); color: var(--black); }
 					.controls {
 						svg { width: 1.5rem; height: 1.5rem; cursor: pointer; user-select: none; }
 						.is-redact {
@@ -261,6 +253,15 @@ export default {
 								.bi-x-circle-fill { display: block; }
 							}
 						}
+					}
+					.delete-scheme {
+						margin-left: auto;
+						background: var(--accent2);
+						color: var(--white);
+						font-family: 'Neo Sans Pro', sans-serif;
+						font-size: 1rem;
+						transition: 0.3s;
+						&:hover { background: var(--accent2-hover); }
 					}
 				}
 			}
